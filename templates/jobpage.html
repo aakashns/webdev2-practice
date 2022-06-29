@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{job['title']}} - Jovian</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <style>
+      #banner {
+        height: 360px;
+        width: 100%;
+        object-fit:cover;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'nav.html' %}
+    <img class="img-fluid" id="banner" src="https://jovian-careers-website.aakashns.repl.co/static/banner.jpeg" >
+    <div class="container">
+      <h1 class="text-center">Jovian Careers</h1>
+      <h2 class="mb-0">{{job['title']}}</h2>
+      <div class="lead mb-3">{{job['location']}}</div>
+      <h3>Responsbilities</h3>
+      <ul>
+        {% for line in job['responsibilities'].split('\n') %}
+          <li>{{line}}</li>
+        {% endfor %}
+      </ul>
+      <h3>Requirements</h3>
+      <ol>
+        {% for line in job['requirements'].split('\n') %}
+          <li>{{line}}</li>
+        {% endfor %}
+      </ol>
+  
+      <div><b>Salary</b>: {{job['currency']}}{{job['salary']}}</div>
+    </div>
+    {% include 'footer.html' %}
+  </body>
+</html>

@@ -3,36 +3,18 @@ from database import engine
 
 app = Flask(__name__)
 
-JOBS = [
-  {
-    'id': 1,
-    'title': 'Data Analyst',
-    'location': 'Bengaluru, India',
-    'salary': 'Rs. 10,00,000'
-  },
-  {
-    'id': 2,
-    'title': 'Data Scientist',
-    'location': 'Delhi, India',
-    'salary': 'Rs. 15,00,000'
-  },
-  {
-    'id': 3,
-    'title': 'Frontend Engineer',
-    'location': 'Remote'
-  },
-  {
-    'id': 4,
-    'title': 'Backend Engineer',
-    'location': 'San Francisco, USA',
-    'salary': '$150,000'
-  }
-]
-
 def load_jobs():
   with engine.connect() as conn:
     result = conn.execute('select * from jobs')
     return list(result.mappings())
+
+def load_job(id):
+  with engine.connect() as conn:
+    result = conn.execute('select * from jobs where id = ' + id)
+    jobs = list(result.mappings())
+    if len(jobs) == 0:
+      return None
+    return dict(jobs[0])
 
 @app.route("/")
 def hello_jovian():
@@ -43,7 +25,16 @@ def hello_jovian():
 
 @app.route("/api/jobs")
 def list_jobs():
-  return jsonify(JOBS)
+  jobs = load_jobs()
+  return jsonify(jobs)
+
+@app.route("/job/<id>")
+def show_job(id):
+  job = load_job(id)
+  if job:
+    return render_template('jobpage.html', job=job)
+  else:
+    return "Not Found", 404
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', debug=True)
